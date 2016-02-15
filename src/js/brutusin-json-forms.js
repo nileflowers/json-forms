@@ -12,17 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
 
-if (typeof brutusin === "undefined") {
-    window.brutusin = new Object();
-} else if (typeof brutusin !== "object") {
-    throw ("brutusin global variable already exists");
-}
-
-(function () {
+ (function defineBrutusin (global, factory) {
+   if (typeof exports === 'object' && exports && typeof exports.nodeName !== 'string') {
+     factory(exports); // CommonJS
+   } else if (typeof define === 'function' && define.amd) {
+     define(['exports'], factory); // AMD
+   } else {
+     global.brutusin = {};
+     factory(global.brutusin); // script, wsh, asp
+   }
+ }(this, function BrutusinFactory (brutusin) {
     if (!String.prototype.startsWith) {
         String.prototype.startsWith = function (searchString, position) {
             position = position || 0;
@@ -277,7 +280,7 @@ if (typeof brutusin === "undefined") {
 //        if (s.required) {
 //            input.required = true;
 //        }
-//       
+//
 //        if (s.minimum) {
 //            input.min = s.minimum;
 //        }
@@ -786,10 +789,10 @@ if (typeof brutusin === "undefined") {
                 for (var i = 0; i < schema.dependsOn.length; i++) {
                     if (!schema.dependsOn[i]) {
                         arr[i] = "$";
-                        // Relative cases 
+                        // Relative cases
                     } else if (schema.dependsOn[i].startsWith("$")) {
                         arr[i] = schema.dependsOn[i];
-                        // Relative cases 
+                        // Relative cases
                     } else if (name.endsWith("]")) {
                         arr[i] = name + "." + schema.dependsOn[i];
                     } else {
@@ -1179,4 +1182,4 @@ if (typeof brutusin === "undefined") {
         }
     }
     brutusin["json-forms"] = BrutusinForms;
-}());
+}));
